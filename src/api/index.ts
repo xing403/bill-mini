@@ -3,19 +3,11 @@ type METHOD = "POST" | "GET" | "PUT" | "DELETE"
 
 let header = {
   'content-type': 'application/json',
-  "Authorization": ''
 }
 function request(url: string, data: any, method: METHOD = "GET", config = { header }) {
-  const token = uni.getStorageSync("token")
-
-  config.header = {
-    ...(config.header),
-    Authorization: token
-  }
-
   return new Promise((resolve, reject) => {
     uni.request({
-      url: CONFIG.APP_API_URL + (url.startsWith('/') ? url : '/' + url),
+      url,
       data,
       method,
       ...config,
@@ -32,7 +24,17 @@ function request(url: string, data: any, method: METHOD = "GET", config = { head
     })
   })
 }
-
+uni.addInterceptor('request', {
+  // request 触发前拼接 url
+  invoke(config) {
+    const { url, header } = config
+    config.url = CONFIG.APP_API_URL + (url.startsWith('/') ? url : '/' + url)
+    config.header = {
+      ...header,
+      Authorization: uni.getStorageSync('token')
+    }
+  },
+})
 
 function get(url: string, config?: any) {
   return request(url, null, 'GET', config)

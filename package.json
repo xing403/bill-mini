@@ -61,6 +61,7 @@
     "@tuniao/tn-icon": "^1.9.0",
     "@tuniao/tn-style": "^1.0.19",
     "@tuniao/tnui-vue3-uniapp": "^1.0.21",
+    "pinia": "^2.2.4",
     "vue": "^3.4.21",
     "vue-i18n": "^9.1.9"
   },

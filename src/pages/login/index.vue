@@ -1,13 +1,20 @@
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import TnForm from '@tuniao/tnui-vue3-uniapp/components/form/src/form.vue'
 import TnFormItem from '@tuniao/tnui-vue3-uniapp/components/form/src/form-item.vue'
 import TnButton from '@tuniao/tnui-vue3-uniapp/components/button/src/button.vue'
 import TnInput from '@tuniao/tnui-vue3-uniapp/components/input/src/input.vue'
 
 import type { FormRules, TnFormInstance } from '@tuniao/tnui-vue3-uniapp'
-import { login } from '@/api/modules/user'
+import useUserStore from '@/store/modules/user'
 const formRef = ref<TnFormInstance>()
+const userStore = useUserStore()
+
+function handleGetUserInfo() {
+  userStore.getUserInformation().then(() => {
+    uni.redirectTo({ url: '/pages/index/index' })
+  })
+}
 
 // 表单数据
 const form = reactive({
@@ -31,33 +38,42 @@ const formRules: FormRules = {
 const submitForm = () => {
   formRef.value?.validate((valid) => {
     if (valid) {
-      login(form).then((res: any) => {
+      userStore.handleUserLogin(form).then((res: any) => {
         uni.setStorageSync('token', res.data)
         uni.navigateTo({ url: '/pages/index/index' })
       })
     }
   })
 }
+onMounted(() => {
+  handleGetUserInfo()
+})
 </script>
 
 <template>
-  <view class="content">
-    <TnForm ref="formRef" label-position="top" :model="form" :rules="formRules">
-      <TnFormItem label="用户名" prop="username">
-        <TnInput v-model="form.username" />
-      </TnFormItem>
-      <TnFormItem label="密码" prop="password">
-        <TnInput type="password" v-model="form.password" />
-      </TnFormItem>
-    </TnForm>
-    <view class="tn-w-full tn-flex-center">
-      <TnButton size="lg" class="tn-w-full" @click="submitForm">登录</TnButton>
+  <view class="layout">
+    <view class="content">
+      <TnForm ref="formRef" label-position="top" :model="form" :rules="formRules">
+        <TnFormItem label="用户名" prop="username">
+          <TnInput v-model="form.username" />
+        </TnFormItem>
+        <TnFormItem label="密码" prop="password">
+          <TnInput type="password" v-model="form.password" />
+        </TnFormItem>
+      </TnForm>
+      <view class="tn-w-full tn-flex-center">
+        <TnButton size="lg" class="tn-w-full" @click="submitForm">登录</TnButton>
+      </view>
     </view>
   </view>
 </template>
 
 <style lang="scss" scoped>
 .content {
+  margin: 10px;
+  border-radius: 5px;
+  background-color: $tn-bg-color-white;
+  padding: 0 30px;
   padding-top: 150px;
 }
 </style>

@@ -1,5 +1,4 @@
-
-.content {
-  padding: 0 30px;
+.layout {
+  padding: 0 8px;
+  padding-top: var(--status-bar-height);
 }
-
