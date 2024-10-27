@@ -1,4 +1,12 @@
 .layout {
   padding: 0 8px;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
   padding-top: var(--status-bar-height);
+}
+
+.layout .content {
+  flex: 1;
+  background-color: var(--tn-bg-color-page);
 }

@@ -13,12 +13,13 @@ export default defineStore('user', () => {
   const handleUserLogin = ({ username, password }: { username: string, password: string }) => {
     return userApi.login({ username, password }).then(({ data }: any) => {
       token.value = data
+      uni.setStorageSync('token', data)
     })
   }
 
   const getUserInformation = () => {
     return userApi.getUserInfo().then(({ data }: any) => {
-      information.value = data.data
+      information.value = data
     })
   }
 

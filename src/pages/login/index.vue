@@ -13,7 +13,7 @@ const userStore = useUserStore()
 function handleGetUserInfo() {
   userStore.getUserInformation().then(() => {
     uni.redirectTo({ url: '/pages/index/index' })
-  })
+  }).catch(() => { })
 }
 
 // 表单数据
@@ -39,8 +39,7 @@ const submitForm = () => {
   formRef.value?.validate((valid) => {
     if (valid) {
       userStore.handleUserLogin(form).then((res: any) => {
-        uni.setStorageSync('token', res.data)
-        uni.navigateTo({ url: '/pages/index/index' })
+        handleGetUserInfo()
       })
     }
   })
@@ -72,7 +71,6 @@ onMounted(() => {
 .content {
   margin: 10px;
   border-radius: 5px;
-  background-color: $tn-bg-color-white;
   padding: 0 30px;
   padding-top: 150px;
 }
