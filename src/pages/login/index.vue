@@ -6,7 +6,7 @@ import TnButton from '@tuniao/tnui-vue3-uniapp/components/button/src/button.vue'
 import TnInput from '@tuniao/tnui-vue3-uniapp/components/input/src/input.vue'
 
 import type { FormRules, TnFormInstance } from '@tuniao/tnui-vue3-uniapp'
-
+import { login } from '@/api/modules/user'
 const formRef = ref<TnFormInstance>()
 
 // 表单数据
@@ -31,13 +31,9 @@ const formRules: FormRules = {
 const submitForm = () => {
   formRef.value?.validate((valid) => {
     if (valid) {
-      uni.showToast({
-        title: '提交成功',
-      })
-    } else {
-      uni.showToast({
-        title: '表单校验失败',
-        icon: 'none',
+      login(form).then((res: any) => {
+        uni.setStorageSync('token', res.data)
+        uni.navigateTo({ url: '/pages/index/index' })
       })
     }
   })
@@ -55,10 +51,13 @@ const submitForm = () => {
       </TnFormItem>
     </TnForm>
     <view class="tn-w-full tn-flex-center">
-      <TnButton size="lg" @click="submitForm"> 提交 </TnButton>
+      <TnButton size="lg" class="tn-w-full" @click="submitForm">登录</TnButton>
     </view>
   </view>
 </template>
 
 <style lang="scss" scoped>
+.content {
+  padding-top: 150px;
+}
 </style>
